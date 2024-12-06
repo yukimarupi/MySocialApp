@@ -4,9 +4,10 @@ import { TextField, Button, Box } from '@mui/material';
 const TweetInput = ({ onAddTweet }) => {
     const [tweet, setTweet] = useState('');
     const [username, setUsername] = useState('');
+    const maxLength = 280;
 
     const handleTweetSubmit = () => {
-      if (tweet.trim() && username.trim()) {
+      if (tweet.trim() && username.trim() && tweet.length <= maxLength) {
         onAddTweet({ text: tweet, user: username });
         setTweet('');
         setUsername('');
@@ -23,16 +24,22 @@ const TweetInput = ({ onAddTweet }) => {
         />
         <TextField
           fullWidth
-          label="What's happening?"
+          label={`What's happening? (${tweet.length}/${maxLength})`}
           value={tweet}
           onChange={(e) => setTweet(e.target.value)}
+          error={tweet.length > maxLength}
+          helperText={tweet.length > maxLength ? 'Maximum length exceeded' : ''}
         />
-        <Button variant="contained" color="primary" onClick={handleTweetSubmit}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleTweetSubmit}
+          disabled={tweet.length > maxLength}
+        >
           Tweet
         </Button>
       </Box>
     );
   };
-
 
 export default TweetInput;
