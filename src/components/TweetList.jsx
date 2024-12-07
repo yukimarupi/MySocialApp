@@ -1,13 +1,13 @@
 import React from "react";
 import Tweet from "./Tweet";
+import { v4 as uuidv4 } from 'uuid'; // UUIDをインポート
 
-// eslint-disable-next-line no-unused-vars
 const TweetList = ({ tweets, onDeleteTweet }) => {
     return (
       <div>
         {tweets.map((tweet, index) => (
           <Tweet
-            key={`${tweet.text}-${index}`} // キー生成を安全な方法に変更
+            key={uuidv4()} // UUIDでユニークなキーを生成
             text={tweet.text}
             user={tweet.user}
             onDelete={() => onDeleteTweet(index)}
@@ -15,5 +15,5 @@ const TweetList = ({ tweets, onDeleteTweet }) => {
         ))}
       </div>
     );
-  };
-  export default TweetList;
+};
+export default TweetList;
