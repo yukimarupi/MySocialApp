@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Typography, IconButton, Box, TextField, Button } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Typography,
+  IconButton,
+  Box,
+  TextField,
+  Button,
+} from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import CommentIcon from '@mui/icons-material/Comment';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Tweet = ({ text, user, timestamp, onDelete }) => {
   const [likes, setLikes] = useState(0);
@@ -22,28 +31,38 @@ const Tweet = ({ text, user, timestamp, onDelete }) => {
   return (
     <Card sx={{ mb: 2 }}>
       <CardContent>
-      <Typography variant="subtitle1">{user}</Typography>
-        <Typography variant="body2" color="textSecondary">{timestamp}</Typography>
-        <Typography variant="body1">{text}</Typography>
+        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+          {user}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          {timestamp}
+        </Typography>
+        <Typography variant="body1" sx={{ mt: 1 }}>
+          {text}
+        </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
           <Box>
-            <IconButton onClick={handleLike}>
+            <IconButton onClick={handleLike} aria-label="Like">
               <FavoriteIcon color="error" />
             </IconButton>
             {likes}
 
-            <IconButton onClick={handleRetweet}>
+            <IconButton onClick={handleRetweet} aria-label="Retweet">
               <RepeatIcon color="primary" />
             </IconButton>
             {retweets}
 
-            <IconButton>
+            <IconButton aria-label="Comment">
               <CommentIcon />
             </IconButton>
           </Box>
           <Box>
-            <IconButton color="error" onClick={onDelete}>
-              🗑
+            <IconButton
+              color="error"
+              onClick={onDelete}
+              aria-label="Delete Tweet"
+            >
+              <DeleteIcon />
             </IconButton>
           </Box>
         </Box>
@@ -53,17 +72,29 @@ const Tweet = ({ text, user, timestamp, onDelete }) => {
             placeholder="Add a comment"
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
+            multiline
+            rows={2}
           />
-          <Button variant="contained" sx={{ mt: 1 }} onClick={handleAddComment}>
+          <Button
+            variant="contained"
+            sx={{ mt: 1 }}
+            onClick={handleAddComment}
+            disabled={!commentText.trim()}
+          >
             Comment
           </Button>
         </Box>
         {comments.length > 0 && (
           <Box sx={{ mt: 2 }}>
-
-            <Typography variant="subtitle2">Comments:</Typography>
+            <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+              Comments:
+            </Typography>
             {comments.map((comment, index) => (
-              <Typography key={index} sx={{ mt: 1 }}>
+              <Typography
+                key={`${comment}-${index}`}
+                sx={{ mt: 1 }}
+                variant="body2"
+              >
                 {comment}
               </Typography>
             ))}

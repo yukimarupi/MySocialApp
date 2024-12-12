@@ -8,7 +8,7 @@ import { Container } from '@mui/material';
 
 const Home = () => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [showRegister, setShowRegister] = useState(false); // Register画面の表示制御
+  const [showRegister, setShowRegister] = useState(false);
   const [tweets, setTweets] = useState([]);
 
   const handleLogin = (username) => {
@@ -16,15 +16,15 @@ const Home = () => {
   };
 
   const handleRegister = () => {
-    setShowRegister(false); // 登録後にログイン画面に戻る
+    setShowRegister(false);
   };
 
   const toggleToRegister = () => {
-    setShowRegister(true); // 新規登録画面を表示
+    setShowRegister(true);
   };
 
   const toggleToLogin = () => {
-    setShowRegister(false); // ログイン画面を表示
+    setShowRegister(false);
   };
 
   return (
