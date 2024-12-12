@@ -1,52 +1,51 @@
-/* eslint-disable no-unused-vars */
-// eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect, useCallback } from 'react'; // useCallbackを追加
+import React, { useState } from 'react';
 import Header from '../components/Header';
+import Login from './Login';
+import Register from './Register';
 import TweetInput from '../components/TweetInput';
 import TweetList from '../components/TweetList';
-import { Container, IconButton } from '@mui/material'; // IconButton を追加
-import { ThemeProvider } from '@mui/material/styles';
-import { lightTheme, darkTheme } from '../theme'; // テーマ設定
-import Brightness7Icon from '@mui/icons-material/Brightness7'; // 明るいアイコン
-import Brightness4Icon from '@mui/icons-material/Brightness4'; // 暗いアイコン
-
-
+import { Container } from '@mui/material';
 
 const Home = () => {
-    const [tweets, setTweets] = useState(() => {
-      const storedTweets = localStorage.getItem('tweets');
-      return storedTweets ? JSON.parse(storedTweets) : [];
-    });
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showRegister, setShowRegister] = useState(false); // Register画面の表示制御
+  const [tweets, setTweets] = useState([]);
 
-    const [darkMode, setDarkMode] = useState(false);
+  const handleLogin = (username) => {
+    setCurrentUser(username);
+  };
 
-    const addTweet = useCallback((tweet) => {
-        const updatedTweets = [tweet, ...tweets];
-        setTweets(updatedTweets);
-        localStorage.setItem('tweets', JSON.stringify(updatedTweets));
-      }, [tweets]);
+  const handleRegister = () => {
+    setShowRegister(false); // 登録後にログイン画面に戻る
+  };
 
-      const deleteTweet = useCallback((index) => {
-        const updatedTweets = tweets.filter((_, i) => i !== index);
-        setTweets(updatedTweets);
-        localStorage.setItem('tweets', JSON.stringify(updatedTweets));
-      }, [tweets]);
+  const toggleToRegister = () => {
+    setShowRegister(true); // 新規登録画面を表示
+  };
 
-      return (
-        <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-          <div>
-            <Header />
-            <Container sx={{ mt: 4 }}>
-              <IconButton onClick={() => setDarkMode(!darkMode)} sx={{ float: 'right' }}>
-                {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
-              </IconButton>
-              <TweetInput onAddTweet={addTweet} />
-              <TweetList tweets={tweets} onDeleteTweet={deleteTweet} />
-            </Container>
-          </div>
-        </ThemeProvider>
-      );
-    };
+  const toggleToLogin = () => {
+    setShowRegister(false); // ログイン画面を表示
+  };
 
+  return (
+    <div>
+      <Header />
+      <Container sx={{ mt: 4 }}>
+        {!currentUser ? (
+          showRegister ? (
+            <Register onRegister={handleRegister} toggleToLogin={toggleToLogin} />
+          ) : (
+            <Login onLogin={handleLogin} toggleToRegister={toggleToRegister} />
+          )
+        ) : (
+          <>
+            <TweetInput onAddTweet={(tweet) => setTweets([tweet, ...tweets])} currentUser={currentUser} />
+            <TweetList tweets={tweets} />
+          </>
+        )}
+      </Container>
+    </div>
+  );
+};
 
 export default Home;

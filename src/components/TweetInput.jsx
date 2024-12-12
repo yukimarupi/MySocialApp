@@ -1,21 +1,40 @@
+/* eslint-disable react/jsx-no-undef */
 import React, { useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
+import { v4 as uuidv4 } from 'uuid'; // UUIDをインポート
+
 
 const TweetInput = ({ onAddTweet }) => {
     const [tweet, setTweet] = useState('');
     const [username, setUsername] = useState('');
     const maxLength = 280;
 
+    const [error, setError] = useState('');
+
     const handleTweetSubmit = () => {
-      if (tweet.trim() && username.trim() && tweet.length <= maxLength) {
-        onAddTweet({ text: tweet, user: username });
-        setTweet('');
-        setUsername('');
+      if (!username.trim() || !tweet.trim()) {
+        setError('Username and tweet content are required.');
+        return;
       }
+      if (tweet.length > maxLength) {
+        setError('Tweet exceeds the maximum length.');
+        return;
+      }
+
+      const currentDateTime = new Date().toLocaleString(); // 現在の日時
+      onAddTweet({ id: uuidv4(), text: tweet, user: username, timestamp: currentDateTime });
+      setTweet('');
+      setUsername('');
+      setError('');
     };
 
     return (
       <Box sx={{ display: 'flex', gap: 2, mt: 2, flexDirection: 'column' }}>
+        {error && (
+          <Typography variant="body2" color="error">
+            {error}
+          </Typography>
+        )}
         <TextField
           fullWidth
           label="Username"
